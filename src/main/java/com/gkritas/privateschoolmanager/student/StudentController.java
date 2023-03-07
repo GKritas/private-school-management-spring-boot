@@ -1,13 +1,17 @@
 package com.gkritas.privateschoolmanager.student;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/students")
@@ -15,19 +19,30 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private StudentModelAssembler studentModelAssembler;
+
     @GetMapping
-    public ResponseEntity<List<Student>> getAllStudents() {
-        return new ResponseEntity<>(studentService.findAllStudents(), HttpStatus.OK);
+    public CollectionModel<EntityModel<Student>> getAllStudents() {
+        List<EntityModel<Student>> students = studentService.findAllStudents().stream()
+                .map(studentModelAssembler::toModel).toList();
+
+        return CollectionModel.of(students, linkTo(methodOn(StudentController.class).getAllStudents()).withSelfRel());
     }
 
     @GetMapping("/{studentId}")
-    public ResponseEntity<Optional<Student>> getSingleStudent(@PathVariable UUID studentId) {
-        return new ResponseEntity<>(studentService.findStudentById(studentId), HttpStatus.OK);
+    public EntityModel<Student> getSingleStudent(@PathVariable UUID studentId) {
+        Student student = studentService.findStudentById(studentId);
+
+        return studentModelAssembler.toModel(student);
     }
 
     @PostMapping
-    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
-        return new ResponseEntity<>(studentService.createStudent(student), HttpStatus.CREATED);
+    public ResponseEntity<?> addStudent(@RequestBody Student student) {
+        EntityModel<Student> entityModel = studentModelAssembler.toModel(studentService.createStudent(student));
+
+        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(entityModel);
     }
 
     @DeleteMapping("/{studentId}")
@@ -37,8 +52,13 @@ public class StudentController {
     }
 
     @PutMapping("/{studentId}")
-    public ResponseEntity<Student> updateStudent(@PathVariable UUID studentId, @RequestBody Student student) {
-        Student updatedStudent= studentService.updateStudent(studentId, student);
-        return ResponseEntity.ok(updatedStudent);
+    public ResponseEntity<?> updateStudent(@PathVariable UUID studentId, @RequestBody Student student) {
+        Student updatedStudent = studentService.updateStudent(studentId, student);
+
+        EntityModel<Student> entityModel = studentModelAssembler.toModel(updatedStudent);
+
+
+        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(entityModel);
     }
 }

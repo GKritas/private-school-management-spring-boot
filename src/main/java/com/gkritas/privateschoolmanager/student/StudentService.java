@@ -17,8 +17,8 @@ public class StudentService {
     }
 
 
-    public Optional<Student> findStudentById(UUID studentId) {
-        return studentRepository.findById(studentId);
+    public Student findStudentById(UUID studentId) {
+        return studentRepository.findById(studentId).orElseThrow(()-> new StudentNotFoundException("Student not found with id " + studentId));
     }
 
     public Student createStudent(Student student) {
@@ -30,21 +30,26 @@ public class StudentService {
     }
 
     public Student updateStudent(UUID studentId, Student student) {
-        Student updatedStudent = studentRepository
-                .findById(studentId)
-                .orElseThrow(() -> new StudentNotFoundException("Student not found with id " + studentId));
-
-        updatedStudent.setAddress(student.getAddress());
-        updatedStudent.setEmail(student.getEmail());
-        updatedStudent.setGender(student.getGender());
-        updatedStudent.setDateOfBirth(student.getDateOfBirth());
-        updatedStudent.setEnrollmentDate(student.getEnrollmentDate());
-        updatedStudent.setFirstName(student.getFirstName());
-        updatedStudent.setLastName(student.getLastName());
-        updatedStudent.setGuardianFirstName(student.getGuardianFirstName());
-        updatedStudent.setGuardianLastName(student.getGuardianLastName());
-        updatedStudent.setGuardianEmail(student.getGuardianEmail());
-        updatedStudent.setGuardianPhoneNumber(student.getGuardianPhoneNumber());
+        Student updatedStudent = studentRepository.findById(studentId)
+                .map(std -> {
+                    std.setFirstName(student.getFirstName());
+                    std.setLastName(student.getLastName());
+                    std.setGender(student.getGender());
+                    std.setEmail(student.getEmail());
+                    std.setAddress(student.getAddress());
+                    std.setDateOfBirth(student.getDateOfBirth());
+                    std.setEnrollmentDate(student.getEnrollmentDate());
+                    std.setGuardianLastName(student.getGuardianLastName());
+                    std.setGuardianFirstName(student.getGuardianFirstName());
+                    std.setGuardianEmail(student.getGuardianEmail());
+                    std.setGuardianPhoneNumber(student.getGuardianPhoneNumber());
+                    std.setPhoneNumber(student.getPhoneNumber());
+                    return std;
+                })
+                .orElseGet(()-> {
+                    student.setStudentId(studentId);
+                    return student;
+                });
 
         return studentRepository.save(updatedStudent);
     }
