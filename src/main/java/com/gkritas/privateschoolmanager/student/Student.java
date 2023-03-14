@@ -1,7 +1,6 @@
 package com.gkritas.privateschoolmanager.student;
 
 import com.gkritas.privateschoolmanager.course.Course;
-import com.gkritas.privateschoolmanager.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
