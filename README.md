@@ -3,29 +3,26 @@ This is a simple REST API for a private school management app connected with MyS
 
 ## Getting Started
 1. Clone the repository
-
-  `$ git clone https://github.com/GKritas/private-school-management-spring-boot.git`
-
+  ```
+  $ git clone https://github.com/GKritas/private-school-management-spring-boot.git
+  ```
 2. Create a new MySQL database named private-school-db:
-
-  `$ mysql -u <username> -p`
-  
-  `$ CREATE DATABASE private-school-db;`
-
+  ```sql
+  $ mysql -u <username> -p
+  $ CREATE DATABASE private-school-db;
+  ```
 3. Update application.properties with your MySQL database credentials:
-  
-  `spring.datasource.url=jdbc:mysql://localhost:3306/private-school-db`
-  
-  `spring.datasource.username=<your-username>`
-  
-  `spring.datasource.password=<your-password>`
+  ```properties
+  spring.datasource.url=jdbc:mysql://localhost:3306/private-school-db
+  spring.datasource.username=<your-username>
+  spring.datasource.password=<your-password>
+  ```
 
 4. Build and run the application using Maven:
-
-  `$ cd private-school-management-spring-boot`
-  
-  `$ mvn spring-boot:run`
-
+  ```
+  $ cd private-school-management-spring-boot
+  $ mvn spring-boot:run
+  ```
 5. Use an API testing tool (e.g., Postman) to test the endpoints.
 
 
