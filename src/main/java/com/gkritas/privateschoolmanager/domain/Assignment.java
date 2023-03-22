@@ -1,8 +1,8 @@
-package com.gkritas.privateschoolmanager.assignment;
+package com.gkritas.privateschoolmanager.domain;
 
-import com.gkritas.privateschoolmanager.course.Course;
-import com.gkritas.privateschoolmanager.student.Student;
-import com.gkritas.privateschoolmanager.trainer.Trainer;
+import com.gkritas.privateschoolmanager.domain.Course;
+import com.gkritas.privateschoolmanager.domain.Student;
+import com.gkritas.privateschoolmanager.domain.Trainer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

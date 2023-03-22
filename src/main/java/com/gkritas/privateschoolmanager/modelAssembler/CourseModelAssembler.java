@@ -1,7 +1,10 @@
-package com.gkritas.privateschoolmanager.course;
+package com.gkritas.privateschoolmanager.modelAssembler;
 
+import com.gkritas.privateschoolmanager.controller.CourseController;
+import com.gkritas.privateschoolmanager.domain.Course;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -11,7 +14,7 @@ public class CourseModelAssembler implements RepresentationModelAssembler<Course
     @Override
     public EntityModel<Course> toModel(Course course) {
         return EntityModel.of(course,
-                linkTo(methodOn(CourseController.class).getSingleCourse(course.getCourseId())).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(methodOn(CourseController.class).getSingleCourse(course.getCourseId())).withSelfRel(),
                 linkTo(methodOn(CourseController.class).getAllCourses()).withRel("courses"));
     }
 }

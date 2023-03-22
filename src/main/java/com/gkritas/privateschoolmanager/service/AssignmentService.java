@@ -1,5 +1,8 @@
-package com.gkritas.privateschoolmanager.assignment;
+package com.gkritas.privateschoolmanager.service;
 
+import com.gkritas.privateschoolmanager.domain.Assignment;
+import com.gkritas.privateschoolmanager.exception.AssignmentNotFoundException;
+import com.gkritas.privateschoolmanager.repository.AssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

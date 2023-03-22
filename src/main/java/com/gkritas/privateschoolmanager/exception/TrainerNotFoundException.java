@@ -1,4 +1,4 @@
-package com.gkritas.privateschoolmanager.trainer;
+package com.gkritas.privateschoolmanager.exception;
 
 public class TrainerNotFoundException extends RuntimeException{
 

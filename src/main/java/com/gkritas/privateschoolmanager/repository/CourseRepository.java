@@ -1,5 +1,6 @@
-package com.gkritas.privateschoolmanager.course;
+package com.gkritas.privateschoolmanager.repository;
 
+import com.gkritas.privateschoolmanager.domain.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

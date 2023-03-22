@@ -1,5 +1,8 @@
-package com.gkritas.privateschoolmanager.course;
+package com.gkritas.privateschoolmanager.controller;
 
+import com.gkritas.privateschoolmanager.domain.Course;
+import com.gkritas.privateschoolmanager.modelAssembler.CourseModelAssembler;
+import com.gkritas.privateschoolmanager.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;

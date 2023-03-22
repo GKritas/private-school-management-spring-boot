@@ -1,5 +1,8 @@
-package com.gkritas.privateschoolmanager.trainer;
+package com.gkritas.privateschoolmanager.service;
 
+import com.gkritas.privateschoolmanager.domain.Trainer;
+import com.gkritas.privateschoolmanager.exception.TrainerNotFoundException;
+import com.gkritas.privateschoolmanager.repository.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

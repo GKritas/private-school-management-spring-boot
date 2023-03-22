@@ -1,10 +1,12 @@
-package com.gkritas.privateschoolmanager.student;
+package com.gkritas.privateschoolmanager.service;
 
+import com.gkritas.privateschoolmanager.domain.Student;
+import com.gkritas.privateschoolmanager.exception.StudentNotFoundException;
+import com.gkritas.privateschoolmanager.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

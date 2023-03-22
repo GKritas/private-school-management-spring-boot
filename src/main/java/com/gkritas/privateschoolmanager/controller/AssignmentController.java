@@ -1,5 +1,8 @@
-package com.gkritas.privateschoolmanager.assignment;
+package com.gkritas.privateschoolmanager.controller;
 
+import com.gkritas.privateschoolmanager.domain.Assignment;
+import com.gkritas.privateschoolmanager.modelAssembler.AssignmentModelAssembler;
+import com.gkritas.privateschoolmanager.service.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;

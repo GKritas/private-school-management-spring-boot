@@ -1,4 +1,4 @@
-package com.gkritas.privateschoolmanager.student;
+package com.gkritas.privateschoolmanager.exception;
 
 public class StudentNotFoundException extends RuntimeException{
 

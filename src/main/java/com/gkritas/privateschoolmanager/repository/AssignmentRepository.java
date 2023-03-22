@@ -1,5 +1,6 @@
-package com.gkritas.privateschoolmanager.assignment;
+package com.gkritas.privateschoolmanager.repository;
 
+import com.gkritas.privateschoolmanager.domain.Assignment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

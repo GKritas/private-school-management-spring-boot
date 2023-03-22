@@ -1,4 +1,4 @@
-package com.gkritas.privateschoolmanager.assignment;
+package com.gkritas.privateschoolmanager.exception;
 
 public class AssignmentNotFoundException extends RuntimeException{
 

@@ -1,4 +1,4 @@
-package com.gkritas.privateschoolmanager.course;
+package com.gkritas.privateschoolmanager.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

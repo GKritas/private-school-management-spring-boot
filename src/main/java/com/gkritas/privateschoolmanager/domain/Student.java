@@ -1,6 +1,5 @@
-package com.gkritas.privateschoolmanager.trainer;
+package com.gkritas.privateschoolmanager.domain;
 
-import com.gkritas.privateschoolmanager.course.Course;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,19 +12,17 @@ import java.util.UUID;
 
 @Data
 @Builder
-@Entity(name = "trainers")
+@Entity(name = "students")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Trainer {
+public class Student {
     @Id
     @GeneratedValue
-    private UUID trainerId;
-
+    private UUID studentId;
     @Column(unique = true)
     private String username;
     @Column(unique = true)
     private String password;
-
     private String firstName;
     private String lastName;
     private String address;
@@ -33,11 +30,16 @@ public class Trainer {
     private String phoneNumber;
     private LocalDate dateOfBirth;
     private String gender;
-    private LocalDate hireDate;
-    private Long salary;
+    private String guardianFirstName;
+    private String guardianLastName;
+    private String guardianEmail;
+    private String guardianPhoneNumber;
+    private LocalDate enrollmentDate;
+
     @ManyToMany
-    @JoinTable(name = "trainer_course",
-            joinColumns = @JoinColumn(name = "trainer_id"),
+    @JoinTable(name = "student_course",
+            joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "course_id"))
-    private List<Course> course;
+    private List<Course> courses;
+
 }

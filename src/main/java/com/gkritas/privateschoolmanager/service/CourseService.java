@@ -1,5 +1,8 @@
-package com.gkritas.privateschoolmanager.course;
+package com.gkritas.privateschoolmanager.service;
 
+import com.gkritas.privateschoolmanager.domain.Course;
+import com.gkritas.privateschoolmanager.exception.CourseNotFoundException;
+import com.gkritas.privateschoolmanager.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

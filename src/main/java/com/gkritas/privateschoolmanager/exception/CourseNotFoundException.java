@@ -1,4 +1,4 @@
-package com.gkritas.privateschoolmanager.course;
+package com.gkritas.privateschoolmanager.exception;
 
 public class CourseNotFoundException extends RuntimeException{
     public CourseNotFoundException(String message) {
