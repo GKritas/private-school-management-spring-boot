@@ -1,5 +1,6 @@
 package com.gkritas.privateschoolmanager.controller;
 
+import com.gkritas.privateschoolmanager.DTO.TrainerDTO;
 import com.gkritas.privateschoolmanager.domain.Trainer;
 import com.gkritas.privateschoolmanager.modelAssembler.TrainerModelAssembler;
 import com.gkritas.privateschoolmanager.service.TrainerService;
@@ -11,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -27,41 +27,39 @@ public class TrainerController {
     private TrainerModelAssembler trainerModelAssembler;
 
     @GetMapping
-    public CollectionModel<EntityModel<Trainer>> getAllTrainers() {
-        List<EntityModel<Trainer>> trainers = trainerService.findAllTrainers().stream()
-                .map(trainerModelAssembler::toModel).toList();
+    public CollectionModel<EntityModel<TrainerDTO>> getAllTrainers() {
+        List<Trainer> trainers = trainerService.findAllTrainers();
+        List<EntityModel<TrainerDTO>> trainerModels = trainers.stream()
+                .map(trainerModelAssembler::toModel)
+                .toList();
 
-        return CollectionModel.of(trainers, linkTo(methodOn(TrainerController.class).getAllTrainers()).withSelfRel());
+        return CollectionModel.of(trainerModels,
+                linkTo(methodOn(TrainerController.class).getAllTrainers()).withSelfRel());
     }
 
     @GetMapping("/{trainerId}")
-    public EntityModel<Trainer> getSingleTrainer(@PathVariable UUID trainerId) {
+    public EntityModel<TrainerDTO> getSingleTrainer(@PathVariable Long trainerId) {
         Trainer trainer = trainerService.findTrainerById(trainerId);
-
         return trainerModelAssembler.toModel(trainer);
     }
 
     @PostMapping
-    public ResponseEntity<?> addTrainer(@RequestBody Trainer trainer) {
-        EntityModel<Trainer> entityModel = trainerModelAssembler.toModel(trainerService.createTrainer(trainer));
+    public ResponseEntity<EntityModel<TrainerDTO>> addTrainer(@RequestBody Trainer trainer) {
+        Trainer createdTrainer = trainerService.createTrainer(trainer);
+        EntityModel<TrainerDTO> trainerModel = trainerModelAssembler.toModel(createdTrainer);
 
-        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(entityModel);
+        return ResponseEntity.created(trainerModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(trainerModel);
     }
 
     @DeleteMapping("/{trainerId}")
-    public ResponseEntity<?> removeTrainer(@PathVariable UUID trainerId) {
+    public ResponseEntity<?> removeTrainer(@PathVariable Long trainerId) {
         trainerService.deleteTrainerById(trainerId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{trainerId}")
-    public ResponseEntity<?> updateTrainer(@PathVariable UUID trainerId, @RequestBody Trainer trainer) {
+    public EntityModel<TrainerDTO> updateTrainer(@PathVariable Long trainerId, @RequestBody Trainer trainer) {
         Trainer updatedTrainer = trainerService.updateTrainer(trainer, trainerId);
-
-        EntityModel<Trainer> entityModel = trainerModelAssembler.toModel(updatedTrainer);
-
-        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(entityModel);
+        return trainerModelAssembler.toModel(updatedTrainer);
     }
 }

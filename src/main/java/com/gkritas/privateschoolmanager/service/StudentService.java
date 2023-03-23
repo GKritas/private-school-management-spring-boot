@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class StudentService {
@@ -19,7 +18,7 @@ public class StudentService {
     }
 
 
-    public Student findStudentById(UUID studentId) {
+    public Student findStudentById(Long studentId) {
         return studentRepository.findById(studentId).orElseThrow(()-> new StudentNotFoundException("Student not found with id " + studentId));
     }
 
@@ -27,31 +26,23 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public void deleteStudentById(UUID studentId) {
-        studentRepository.deleteById(studentId);
+    public void deleteStudentById(Long studentId) {
+        Student deletedStudent = findStudentById(studentId);
+        studentRepository.delete(deletedStudent);
     }
 
-    public Student updateStudent(UUID studentId, Student student) {
-        Student updatedStudent = studentRepository.findById(studentId)
-                .map(std -> {
-                    std.setFirstName(student.getFirstName());
-                    std.setLastName(student.getLastName());
-                    std.setGender(student.getGender());
-                    std.setEmail(student.getEmail());
-                    std.setAddress(student.getAddress());
-                    std.setDateOfBirth(student.getDateOfBirth());
-                    std.setEnrollmentDate(student.getEnrollmentDate());
-                    std.setGuardianLastName(student.getGuardianLastName());
-                    std.setGuardianFirstName(student.getGuardianFirstName());
-                    std.setGuardianEmail(student.getGuardianEmail());
-                    std.setGuardianPhoneNumber(student.getGuardianPhoneNumber());
-                    std.setPhoneNumber(student.getPhoneNumber());
-                    return std;
-                })
-                .orElseGet(()-> {
-                    student.setStudentId(studentId);
-                    return student;
-                });
+    public Student updateStudent(Long studentId, Student student) {
+        Student updatedStudent = findStudentById(studentId);
+
+        updatedStudent.setFirstName(student.getFirstName());
+        updatedStudent.setLastName(student.getLastName());
+        updatedStudent.setAddress(student.getAddress());
+        updatedStudent.setEmail(student.getEmail());
+        updatedStudent.setPhoneNumber(student.getPhoneNumber());
+        updatedStudent.setDateOfBirth(student.getDateOfBirth());
+        updatedStudent.setGender(student.getGender());
+        updatedStudent.setEnrollmentDate(student.getEnrollmentDate());
+        updatedStudent.setCourses(student.getCourses());
 
         return studentRepository.save(updatedStudent);
     }

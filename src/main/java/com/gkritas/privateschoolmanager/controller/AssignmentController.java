@@ -1,6 +1,9 @@
 package com.gkritas.privateschoolmanager.controller;
 
+import com.gkritas.privateschoolmanager.DTO.AssignmentDTO;
+import com.gkritas.privateschoolmanager.DTO.StudentDTO;
 import com.gkritas.privateschoolmanager.domain.Assignment;
+import com.gkritas.privateschoolmanager.domain.Student;
 import com.gkritas.privateschoolmanager.modelAssembler.AssignmentModelAssembler;
 import com.gkritas.privateschoolmanager.service.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,47 +30,54 @@ public class AssignmentController {
     private AssignmentModelAssembler assignmentModelAssembler;
 
     @GetMapping
-    public CollectionModel<EntityModel<Assignment>> getAllAssignments() {
-
-        List<EntityModel<Assignment>> assignments = assignmentService.findAllAssignment().stream()
-                .map(assignmentModelAssembler::toModel).toList();
-
-        return CollectionModel.of(assignments, linkTo(methodOn(AssignmentController.class).getAllAssignments()).withSelfRel());
+    public CollectionModel<EntityModel<AssignmentDTO>> getAllAssignments() {
+        List<Assignment> assignments = assignmentService.findAllAssignment();
+        List<EntityModel<AssignmentDTO>> assignmentModels = assignments.stream()
+                .map(assignmentModelAssembler::toModel)
+                .toList();
+        return CollectionModel.of(assignmentModels,
+                linkTo(methodOn(AssignmentController.class).getAllAssignments()).withSelfRel());
     }
 
 
     @GetMapping("/{assignmentId}")
-    public EntityModel<Assignment> getSingleAssignment(@PathVariable UUID assignmentId) {
+    public EntityModel<AssignmentDTO> getSingleAssignment(@PathVariable Long assignmentId) {
         Assignment assignment = assignmentService.findAssignmentById(assignmentId);
 
         return assignmentModelAssembler.toModel(assignment);
     }
 
+    @GetMapping("/{assignmentId}/students")
+    public CollectionModel<EntityModel<StudentDTO>> getAssignmentStudents(@PathVariable Long assignmentId) {
+        List<Student> students = assignmentService.findAssignmentById(assignmentId).getStudents();
+        List<EntityModel<StudentDTO>> studentModels = students.stream()
+                .map(student -> EntityModel.of(new StudentDTO(student)))
+                .toList();
+
+        return CollectionModel.of(studentModels,
+                linkTo(methodOn(AssignmentController.class).getAssignmentStudents(assignmentId)).withSelfRel());
+    }
+
     @PostMapping
-    public ResponseEntity<?> addAssignment(@RequestBody Assignment assignment) {
-
+    public ResponseEntity<EntityModel<AssignmentDTO>> addAssignment(@RequestBody Assignment assignment) {
         Assignment createdAssignment = assignmentService.createAssignment(assignment);
+        EntityModel<AssignmentDTO> assignmentModel = assignmentModelAssembler.toModel(createdAssignment);
+        return ResponseEntity
+                .created(assignmentModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(assignmentModel);
 
-        EntityModel<Assignment> entityModel = assignmentModelAssembler.toModel(createdAssignment);
-
-        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(entityModel);
     }
 
     @DeleteMapping("/{assignmentId}")
-    public ResponseEntity<?> removeAssignment(@PathVariable UUID assignmentId) {
+    public ResponseEntity<?> removeAssignment(@PathVariable Long assignmentId) {
         assignmentService.deleteAssignmentById(assignmentId);
 
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{assignmentId}")
-    public ResponseEntity<?> updateAssignment(@PathVariable UUID assignmentId, @RequestBody Assignment assignment) {
+    public EntityModel<AssignmentDTO> updateAssignment(@PathVariable Long assignmentId, @RequestBody Assignment assignment) {
         Assignment updatedAssignment = assignmentService.updateAssignment(assignmentId, assignment);
 
-        EntityModel<Assignment> entityModel = assignmentModelAssembler.toModel(updatedAssignment);
-
-        return ResponseEntity.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(entityModel);
+        return assignmentModelAssembler.toModel(updatedAssignment);
     }
 }

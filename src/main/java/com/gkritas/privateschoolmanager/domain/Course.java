@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 
 @Data
@@ -14,8 +13,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Course  {
     @Id
-    @GeneratedValue
-    private UUID courseId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long courseId;
 
     private String name;
     private String description;

@@ -19,33 +19,30 @@ public class AssignmentService {
         return assignmentRepository.findAll();
     }
 
-    public Assignment findAssignmentById(UUID assignmentId) {
-        return assignmentRepository.findById(assignmentId).orElseThrow(()-> new AssignmentNotFoundException("Assignment not found with id " + assignmentId));
+    public Assignment findAssignmentById(Long assignmentId) {
+        return assignmentRepository
+                .findById(assignmentId)
+                .orElseThrow(()-> new AssignmentNotFoundException("Assignment not found with id " + assignmentId));
     }
 
     public Assignment createAssignment(Assignment assignment) {
         return assignmentRepository.save(assignment);
     }
 
-    public void deleteAssignmentById(UUID assignmentId) {
-        assignmentRepository.deleteById(assignmentId);
+    public void deleteAssignmentById(Long assignmentId) {
+        Assignment assignment = findAssignmentById(assignmentId);
+        assignmentRepository.delete(assignment);
     }
 
-    public Assignment updateAssignment(UUID assignmentId, Assignment assignment) {
-        Assignment updatedAssignment = assignmentRepository.findById(assignmentId)
-                .map(asmt -> {
-                    asmt.setName(assignment.getName());
-                    asmt.setDescription(assignment.getDescription());
-                    asmt.setDueDate(assignment.getDueDate());
-                    asmt.setMaximumScore(assignment.getMaximumScore());
-                    asmt.setActualScore(assignment.getActualScore());
-                    return asmt;
-                })
-                .orElseGet(()-> {
-                    assignment.setAssignmentId(assignmentId);
-                    return assignment;
-                });
-
+    public Assignment updateAssignment(Long assignmentId, Assignment assignment) {
+        Assignment updatedAssignment = findAssignmentById(assignmentId);
+        updatedAssignment.setName(assignment.getName());
+        updatedAssignment.setDescription(assignment.getDescription());
+        updatedAssignment.setDueDate(assignment.getDueDate());
+        updatedAssignment.setMaximumScore(assignment.getMaximumScore());
+        updatedAssignment.setActualScore(assignment.getActualScore());
+        updatedAssignment.setCourse(assignment.getCourse());
+        updatedAssignment.setStudents(assignment.getStudents());
         return assignmentRepository.save(updatedAssignment);
     }
 }

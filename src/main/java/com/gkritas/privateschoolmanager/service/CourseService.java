@@ -18,33 +18,32 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
-    public Course findCourseById(UUID courseId) {
-        return courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException("Course not found with id " + courseId));
+    public Course findCourseById(Long courseId) {
+        return courseRepository
+                .findById(courseId)
+                .orElseThrow(() -> new CourseNotFoundException("Course not found with id " + courseId));
+
+
     }
 
     public Course createCourse(Course course) {
         return courseRepository.save(course);
     }
 
-    public void deleteCourseById(UUID courseId) {
-        courseRepository.deleteById(courseId);
+    public void deleteCourseById(Long courseId) {
+        Course deletedCourse = findCourseById(courseId);
+        courseRepository.delete(deletedCourse);
     }
 
-    public Course updateCourse(Course course, UUID courseId) {
-        Course updatedCourse = courseRepository.findById(courseId)
-                .map(crs -> {
-                    crs.setName(course.getName());
-                    crs.setDescription(course.getDescription());
-                    crs.setStartDate(course.getStartDate());
-                    crs.setEndDate(course.getEndDate());
-                    crs.setDuration(course.getDuration());
-                    crs.setFee(course.getFee());
-                    return crs;
-                })
-                .orElseGet(() -> {
-                    course.setCourseId(courseId);
-                    return course;
-                });
+    public Course updateCourse(Course course, Long courseId) {
+        Course updatedCourse = findCourseById(courseId);
+
+        updatedCourse.setName(course.getName());
+        updatedCourse.setDescription(course.getDescription());
+        updatedCourse.setStartDate(course.getStartDate());
+        updatedCourse.setEndDate(course.getEndDate());
+        updatedCourse.setDuration(course.getDuration());
+        updatedCourse.setFee(course.getFee());
 
         return courseRepository.save(updatedCourse);
     }

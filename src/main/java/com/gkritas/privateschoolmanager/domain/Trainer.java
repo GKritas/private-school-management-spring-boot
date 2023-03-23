@@ -7,8 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
+
 
 @Data
 @Builder
@@ -17,13 +16,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Trainer {
     @Id
-    @GeneratedValue
-    private UUID trainerId;
-
-    @Column(unique = true)
-    private String username;
-    @Column(unique = true)
-    private String password;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long trainerId;
 
     private String firstName;
     private String lastName;
@@ -34,9 +28,7 @@ public class Trainer {
     private String gender;
     private LocalDate hireDate;
     private Long salary;
-    @ManyToMany
-    @JoinTable(name = "trainer_course",
-            joinColumns = @JoinColumn(name = "trainer_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id"))
-    private List<Course> course;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
 }

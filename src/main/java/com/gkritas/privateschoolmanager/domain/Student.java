@@ -17,12 +17,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Student {
     @Id
-    @GeneratedValue
-    private UUID studentId;
-    @Column(unique = true)
-    private String username;
-    @Column(unique = true)
-    private String password;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long studentId;
     private String firstName;
     private String lastName;
     private String address;
@@ -30,10 +26,6 @@ public class Student {
     private String phoneNumber;
     private LocalDate dateOfBirth;
     private String gender;
-    private String guardianFirstName;
-    private String guardianLastName;
-    private String guardianEmail;
-    private String guardianPhoneNumber;
     private LocalDate enrollmentDate;
 
     @ManyToMany

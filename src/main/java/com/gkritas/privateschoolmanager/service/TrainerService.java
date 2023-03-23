@@ -18,7 +18,7 @@ public class TrainerService {
         return trainerRepository.findAll();
     }
 
-    public Trainer findTrainerById(UUID trainerId) {
+    public Trainer findTrainerById(Long trainerId) {
         return trainerRepository.findById(trainerId).orElseThrow(()-> new TrainerNotFoundException("Trainer not found with id " + trainerId));
     }
 
@@ -26,28 +26,24 @@ public class TrainerService {
         return trainerRepository.save(trainer);
     }
 
-    public void deleteTrainerById(UUID trainerId) {
-        trainerRepository.deleteById(trainerId);
+    public void deleteTrainerById(Long trainerId) {
+        Trainer trainer = findTrainerById(trainerId);
+        trainerRepository.delete(trainer);
     }
 
-    public Trainer updateTrainer(Trainer trainer, UUID trainerId) {
-        Trainer updatedTrainer = trainerRepository.findById(trainerId)
-                .map(trn -> {
-                    trn.setFirstName(trainer.getFirstName());
-                    trn.setLastName(trainer.getLastName());
-                    trn.setDateOfBirth(trainer.getDateOfBirth());
-                    trn.setAddress(trainer.getAddress());
-                    trn.setEmail(trainer.getEmail());
-                    trn.setGender(trainer.getGender());
-                    trn.setPhoneNumber(trainer.getPhoneNumber());
-                    trn.setSalary(trainer.getSalary());
-                    trn.setHireDate(trainer.getHireDate());
-                    return trn;
-                })
-                .orElseGet(()->{
-                    trainer.setTrainerId(trainerId);
-                    return trainer;
-                });
+    public Trainer updateTrainer(Trainer trainer, Long trainerId) {
+        Trainer updatedTrainer = findTrainerById(trainerId);
+
+        updatedTrainer.setFirstName(trainer.getFirstName());
+        updatedTrainer.setLastName(trainer.getLastName());
+        updatedTrainer.setAddress(trainer.getAddress());
+        updatedTrainer.setEmail(trainer.getEmail());
+        updatedTrainer.setPhoneNumber(trainer.getPhoneNumber());
+        updatedTrainer.setDateOfBirth(trainer.getDateOfBirth());
+        updatedTrainer.setGender(trainer.getGender());
+        updatedTrainer.setHireDate(trainer.getHireDate());
+        updatedTrainer.setSalary(trainer.getSalary());
+        updatedTrainer.setCourse(trainer.getCourse());
 
         return trainerRepository.save(updatedTrainer);
     }
