@@ -1,20 +1,17 @@
-package com.gkritas.privateschoolmanager.domain;
+package com.gkritas.privateschoolmanager.model;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
-@Builder
+
 @Entity(name = "assignments")
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
+@RequiredArgsConstructor
 public class Assignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +25,11 @@ public class Assignment {
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
-    @ManyToMany
-    @JoinTable(name = "assignment_student",
-            joinColumns = @JoinColumn(name = "assignment_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id"))
+    @ManyToMany(mappedBy = "assignments")
     private List<Student> students;
+
+    @ManyToOne
+    @JoinColumn(name = "trainer_id")
+    private Trainer trainer;
 
 }

@@ -1,19 +1,16 @@
-package com.gkritas.privateschoolmanager.domain;
+package com.gkritas.privateschoolmanager.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
-@Data
-@Builder
 @Entity(name = "trainers")
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
+@RequiredArgsConstructor
 public class Trainer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +25,13 @@ public class Trainer {
     private String gender;
     private LocalDate hireDate;
     private Long salary;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "course_id")
     private Course course;
+
+    @ManyToMany(mappedBy = "trainers")
+    private List<Student> students;
+
+    @OneToMany(mappedBy = "trainer")
+    private List<Assignment> assignments;
 }

@@ -1,8 +1,8 @@
 package com.gkritas.privateschoolmanager.controller;
 
 import com.gkritas.privateschoolmanager.DTO.CourseDTO;
-import com.gkritas.privateschoolmanager.domain.Course;
-import com.gkritas.privateschoolmanager.modelAssembler.CourseModelAssembler;
+import com.gkritas.privateschoolmanager.assembler.CourseModelAssembler;
+import com.gkritas.privateschoolmanager.model.Course;
 import com.gkritas.privateschoolmanager.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -12,13 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/api/courses")
+@RequestMapping("/api/v1/courses")
 public class CourseController {
     @Autowired
     private CourseService courseService;
@@ -28,7 +27,7 @@ public class CourseController {
 
     @GetMapping
     public CollectionModel<EntityModel<CourseDTO>> getAllCourses() {
-        List<Course> courses = courseService.findAllCourses();
+        List<CourseDTO> courses = courseService.findAllCourses();
 
         List<EntityModel<CourseDTO>> courseModels = courses.stream()
                 .map(courseModelAssembler::toModel)
@@ -42,14 +41,14 @@ public class CourseController {
     @GetMapping("/{courseId}")
     public EntityModel<CourseDTO> getSingleCourse(@PathVariable Long courseId) {
 
-        Course course = courseService.findCourseById(courseId);
+        CourseDTO course = courseService.findCourseById(courseId);
 
         return courseModelAssembler.toModel(course);
     }
 
     @PostMapping
-    public ResponseEntity<EntityModel<CourseDTO>> createCourse(@RequestBody Course course) {
-        Course createdCourse = courseService.createCourse(course);
+    public ResponseEntity<EntityModel<CourseDTO>> createCourse(@RequestBody CourseDTO course) {
+        CourseDTO createdCourse = courseService.createCourse(course);
 
         EntityModel<CourseDTO> courseModel = courseModelAssembler.toModel(createdCourse);
 
@@ -64,8 +63,8 @@ public class CourseController {
     }
 
     @PutMapping("/{courseId}")
-    public EntityModel<CourseDTO> updateCourse(@RequestBody Course course,@PathVariable Long courseId) {
-        Course updatedCourse = courseService.updateCourse(course, courseId);
+    public EntityModel<CourseDTO> updateCourse(@RequestBody CourseDTO course,@PathVariable Long courseId) {
+        CourseDTO updatedCourse = courseService.updateCourse(course, courseId);
         return courseModelAssembler.toModel(updatedCourse);
     }
 }
