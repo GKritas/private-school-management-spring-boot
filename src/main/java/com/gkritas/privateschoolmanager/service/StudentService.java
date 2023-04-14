@@ -1,60 +1,41 @@
 package com.gkritas.privateschoolmanager.service;
 
-import com.gkritas.privateschoolmanager.DTO.StudentDTO;
-import com.gkritas.privateschoolmanager.model.Student;
 import com.gkritas.privateschoolmanager.exception.StudentNotFoundException;
+import com.gkritas.privateschoolmanager.model.Student;
 import com.gkritas.privateschoolmanager.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public List<StudentDTO> findAllStudents() {
-        List<Student> students = studentRepository.findAll();
-        return students.stream().map(StudentDTO::new).collect(Collectors.toList());
+    public List<Student> findAllStudents() {
+        return studentRepository.findAll();
     }
 
 
-    public StudentDTO findStudentById(Long studentId) {
-        Student student = studentRepository
-                .findById(studentId)
+    public Student findStudentById(Long id) {
+        return studentRepository
+                .findById(id)
                 .orElseThrow(()->
-                        new StudentNotFoundException("Student not found with id: " + studentId));
-
-        return new StudentDTO(student);
+                        new StudentNotFoundException("Student not found with id: " + id));
     }
 
-    public StudentDTO createStudent(StudentDTO studentDTO) {
-        Student student = new Student();
-        student.setFirstName(studentDTO.getFirstName());
-        student.setLastName(studentDTO.getLastName());
-        student.setEmail(studentDTO.getEmail());
-        student.setAddress(studentDTO.getAddress());
-        student.setGender(studentDTO.getGender());
-        student.setPhoneNumber(studentDTO.getPhoneNumber());
-        student.setEnrollmentDate(studentDTO.getEnrollmentDate());
-        student.setDateOfBirth(studentDTO.getDateOfBirth());
-        studentRepository.save(student);
-        studentDTO.setStudentId(student.getStudentId());
-        return studentDTO;
-
+    public Student createStudent(Student student) {
+        return studentRepository.save(student);
     }
 
-    public void deleteStudentById(Long studentId) {
-        studentRepository.deleteById(studentId);
+    public void deleteStudentById(Long id) {
+        Student deletedStudent = findStudentById(id);
+        studentRepository.delete(deletedStudent);
     }
 
-    public StudentDTO updateStudent(Long studentId, StudentDTO student) {
-        Student updatedStudent = studentRepository
-                .findById(studentId)
-                .orElseThrow(()->
-                        new StudentNotFoundException("Student not found with id: " + studentId));
+    public Student updateStudent(Long id, Student student) {
+        Student updatedStudent = findStudentById(id);
 
         updatedStudent.setFirstName(student.getFirstName());
         updatedStudent.setLastName(student.getLastName());
@@ -65,6 +46,6 @@ public class StudentService {
         updatedStudent.setGender(student.getGender());
         updatedStudent.setEnrollmentDate(student.getEnrollmentDate());
 
-        return new StudentDTO(studentRepository.save(updatedStudent));
+        return studentRepository.save(updatedStudent);
     }
 }

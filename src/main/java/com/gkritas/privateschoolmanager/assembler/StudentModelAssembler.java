@@ -1,6 +1,5 @@
 package com.gkritas.privateschoolmanager.assembler;
 
-import com.gkritas.privateschoolmanager.DTO.StudentDTO;
 import com.gkritas.privateschoolmanager.controller.StudentController;
 import com.gkritas.privateschoolmanager.model.Student;
 import org.springframework.hateoas.EntityModel;
@@ -11,12 +10,12 @@ import org.springframework.stereotype.Component;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Component
-public class StudentModelAssembler implements RepresentationModelAssembler<StudentDTO, EntityModel<StudentDTO>> {
+public class StudentModelAssembler implements RepresentationModelAssembler<Student, EntityModel<Student>> {
 
     @Override
-    public EntityModel<StudentDTO> toModel(StudentDTO studentDTO) {
-        Link selfLink = linkTo(methodOn(StudentController.class).getSingleStudent(studentDTO.getStudentId())).withSelfRel();
+    public EntityModel<Student> toModel(Student student) {
+        Link selfLink = linkTo(methodOn(StudentController.class).getSingleStudent(student.getId())).withSelfRel();
         Link allLink = linkTo(methodOn(StudentController.class).getAllStudents()).withRel("students");
-        return EntityModel.of(studentDTO, selfLink, allLink);
+        return EntityModel.of(student, selfLink, allLink);
     }
 }

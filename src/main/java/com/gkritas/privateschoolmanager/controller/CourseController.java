@@ -1,6 +1,5 @@
 package com.gkritas.privateschoolmanager.controller;
 
-import com.gkritas.privateschoolmanager.DTO.CourseDTO;
 import com.gkritas.privateschoolmanager.assembler.CourseModelAssembler;
 import com.gkritas.privateschoolmanager.model.Course;
 import com.gkritas.privateschoolmanager.service.CourseService;
@@ -26,10 +25,10 @@ public class CourseController {
 
 
     @GetMapping
-    public CollectionModel<EntityModel<CourseDTO>> getAllCourses() {
-        List<CourseDTO> courses = courseService.findAllCourses();
+    public CollectionModel<EntityModel<Course>> getAllCourses() {
+        List<Course> courses = courseService.findAllCourses();
 
-        List<EntityModel<CourseDTO>> courseModels = courses.stream()
+        List<EntityModel<Course>> courseModels = courses.stream()
                 .map(courseModelAssembler::toModel)
                 .toList();
 
@@ -38,33 +37,33 @@ public class CourseController {
     }
 
 
-    @GetMapping("/{courseId}")
-    public EntityModel<CourseDTO> getSingleCourse(@PathVariable Long courseId) {
+    @GetMapping("/{id}")
+    public EntityModel<Course> getSingleCourse(@PathVariable Long id) {
 
-        CourseDTO course = courseService.findCourseById(courseId);
+        Course course = courseService.findCourseById(id);
 
         return courseModelAssembler.toModel(course);
     }
 
     @PostMapping
-    public ResponseEntity<EntityModel<CourseDTO>> createCourse(@RequestBody CourseDTO course) {
-        CourseDTO createdCourse = courseService.createCourse(course);
+    public ResponseEntity<EntityModel<Course>> createCourse(@RequestBody Course course) {
+        Course createdCourse = courseService.createCourse(course);
 
-        EntityModel<CourseDTO> courseModel = courseModelAssembler.toModel(createdCourse);
+        EntityModel<Course> courseModel = courseModelAssembler.toModel(createdCourse);
 
         return ResponseEntity.created(courseModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
                 .body(courseModel);
     }
 
-    @DeleteMapping("/{courseId}")
-    public ResponseEntity<?> removeCourse(@PathVariable Long courseId) {
-        courseService.deleteCourseById(courseId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> removeCourse(@PathVariable Long id) {
+        courseService.deleteCourseById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{courseId}")
-    public EntityModel<CourseDTO> updateCourse(@RequestBody CourseDTO course,@PathVariable Long courseId) {
-        CourseDTO updatedCourse = courseService.updateCourse(course, courseId);
+    @PutMapping("/{id}")
+    public EntityModel<Course> updateCourse(@RequestBody Course course,@PathVariable Long id) {
+        Course updatedCourse = courseService.updateCourse(course, id);
         return courseModelAssembler.toModel(updatedCourse);
     }
 }

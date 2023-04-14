@@ -15,7 +15,7 @@ import java.util.List;
 public class Assignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long assignmentId;
+    private Long id;
 
     private String name;
     private String description;

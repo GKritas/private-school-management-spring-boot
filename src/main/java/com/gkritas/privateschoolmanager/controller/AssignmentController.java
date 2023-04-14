@@ -1,10 +1,7 @@
 package com.gkritas.privateschoolmanager.controller;
 
-import com.gkritas.privateschoolmanager.DTO.AssignmentDTO;
-import com.gkritas.privateschoolmanager.DTO.StudentDTO;
-import com.gkritas.privateschoolmanager.model.Assignment;
-import com.gkritas.privateschoolmanager.model.Student;
 import com.gkritas.privateschoolmanager.assembler.AssignmentModelAssembler;
+import com.gkritas.privateschoolmanager.model.Assignment;
 import com.gkritas.privateschoolmanager.service.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -19,7 +16,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/api/assignments")
+@RequestMapping("/api/v1/assignments")
 public class AssignmentController {
 
     @Autowired
@@ -29,9 +26,9 @@ public class AssignmentController {
     private AssignmentModelAssembler assignmentModelAssembler;
 
     @GetMapping
-    public CollectionModel<EntityModel<AssignmentDTO>> getAllAssignments() {
-        List<AssignmentDTO> assignments = assignmentService.findAllAssignment();
-        List<EntityModel<AssignmentDTO>> assignmentModels = assignments.stream()
+    public CollectionModel<EntityModel<Assignment>> getAllAssignments() {
+        List<Assignment> assignments = assignmentService.findAllAssignment();
+        List<EntityModel<Assignment>> assignmentModels = assignments.stream()
                 .map(assignmentModelAssembler::toModel)
                 .toList();
         return CollectionModel.of(assignmentModels,
@@ -39,32 +36,32 @@ public class AssignmentController {
     }
 
 
-    @GetMapping("/{assignmentId}")
-    public EntityModel<AssignmentDTO> getSingleAssignment(@PathVariable Long assignmentId) {
-        AssignmentDTO assignment = assignmentService.findAssignmentById(assignmentId);
+    @GetMapping("/{id}")
+    public EntityModel<Assignment> getSingleAssignment(@PathVariable Long id) {
+        Assignment assignment = assignmentService.findAssignmentById(id);
 
         return assignmentModelAssembler.toModel(assignment);
     }
 
     @PostMapping
-    public ResponseEntity<EntityModel<AssignmentDTO>> addAssignment(@RequestBody AssignmentDTO assignment) {
-        AssignmentDTO createdAssignment = assignmentService.createAssignment(assignment);
-        EntityModel<AssignmentDTO> assignmentModel = assignmentModelAssembler.toModel(createdAssignment);
+    public ResponseEntity<EntityModel<Assignment>> addAssignment(@RequestBody Assignment assignment) {
+        Assignment createdAssignment = assignmentService.createAssignment(assignment);
+        EntityModel<Assignment> assignmentModel = assignmentModelAssembler.toModel(createdAssignment);
         return ResponseEntity
                 .created(assignmentModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(assignmentModel);
 
     }
 
-    @DeleteMapping("/{assignmentId}")
-    public ResponseEntity<?> removeAssignment(@PathVariable Long assignmentId) {
-        assignmentService.deleteAssignmentById(assignmentId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> removeAssignment(@PathVariable Long id) {
+        assignmentService.deleteAssignmentById(id);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{assignmentId}")
-    public EntityModel<AssignmentDTO> updateAssignment(@PathVariable Long assignmentId, @RequestBody AssignmentDTO assignment) {
-        AssignmentDTO updatedAssignment = assignmentService.updateAssignment(assignmentId, assignment);
+    @PutMapping("/{id}")
+    public EntityModel<Assignment> updateAssignment(@PathVariable Long id, @RequestBody Assignment assignment) {
+        Assignment updatedAssignment = assignmentService.updateAssignment(id, assignment);
 
         return assignmentModelAssembler.toModel(updatedAssignment);
     }
