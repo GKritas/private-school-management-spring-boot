@@ -11,4 +11,5 @@ public class PrivateschoolmanagerApplication {
 		SpringApplication.run(PrivateschoolmanagerApplication.class, args);
 	}
 
+
 }
