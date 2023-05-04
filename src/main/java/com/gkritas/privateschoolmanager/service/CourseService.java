@@ -36,7 +36,7 @@ public class CourseService {
         courseRepository.delete(deletedCourse);
     }
 
-    public Course updateCourse(Course course, Long id) {
+    public Course updateCourse(Long id, Course course) {
         Course updatedCourse = findCourseById(id);
         updatedCourse.setName(course.getName());
         updatedCourse.setDescription(course.getDescription());

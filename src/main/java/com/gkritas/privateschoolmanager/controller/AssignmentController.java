@@ -1,9 +1,9 @@
 package com.gkritas.privateschoolmanager.controller;
 
 import com.gkritas.privateschoolmanager.assembler.AssignmentModelAssembler;
+import com.gkritas.privateschoolmanager.dto.AssignmentDTO;
 import com.gkritas.privateschoolmanager.model.Assignment;
 import com.gkritas.privateschoolmanager.service.AssignmentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -19,50 +19,54 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("/api/v1/assignments")
 public class AssignmentController {
 
-    @Autowired
-    private AssignmentService assignmentService;
+    private final AssignmentService assignmentService;
 
-    @Autowired
-    private AssignmentModelAssembler assignmentModelAssembler;
+    private final AssignmentModelAssembler assignmentModelAssembler;
+
+    public AssignmentController(AssignmentService assignmentService, AssignmentModelAssembler assignmentModelAssembler) {
+        this.assignmentService = assignmentService;
+        this.assignmentModelAssembler = assignmentModelAssembler;
+    }
 
     @GetMapping
-    public CollectionModel<EntityModel<Assignment>> getAllAssignments() {
+    public ResponseEntity<CollectionModel<EntityModel<AssignmentDTO>>> getAllAssignments() {
         List<Assignment> assignments = assignmentService.findAllAssignment();
-        List<EntityModel<Assignment>> assignmentModels = assignments.stream()
+        List<EntityModel<AssignmentDTO>> assignmentModels = assignments.stream()
                 .map(assignmentModelAssembler::toModel)
                 .toList();
-        return CollectionModel.of(assignmentModels,
-                linkTo(methodOn(AssignmentController.class).getAllAssignments()).withSelfRel());
+        return ResponseEntity.ok(CollectionModel.of(assignmentModels));
     }
 
 
     @GetMapping("/{id}")
-    public EntityModel<Assignment> getSingleAssignment(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<AssignmentDTO>> getSingleAssignment(@PathVariable Long id) {
         Assignment assignment = assignmentService.findAssignmentById(id);
-
-        return assignmentModelAssembler.toModel(assignment);
+        EntityModel<AssignmentDTO> assignmentModel = assignmentModelAssembler.toModel(assignment);
+        return ResponseEntity.ok(assignmentModel);
     }
 
     @PostMapping
-    public ResponseEntity<EntityModel<Assignment>> addAssignment(@RequestBody Assignment assignment) {
+    public ResponseEntity<EntityModel<AssignmentDTO>> createAssignment(@RequestBody Assignment assignment) {
         Assignment createdAssignment = assignmentService.saveAssignment(assignment);
-        EntityModel<Assignment> assignmentModel = assignmentModelAssembler.toModel(createdAssignment);
+        EntityModel<AssignmentDTO> assignmentModel = assignmentModelAssembler.toModel(createdAssignment);
+
         return ResponseEntity
                 .created(assignmentModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(assignmentModel);
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeAssignment(@PathVariable Long id) {
+    public ResponseEntity<?> deleteAssignment(@PathVariable Long id) {
         assignmentService.deleteAssignmentById(id);
 
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public EntityModel<Assignment> updateAssignment(@PathVariable Long id, @RequestBody Assignment assignment) {
+    public ResponseEntity<EntityModel<AssignmentDTO>> updateAssignment(@PathVariable Long id, @RequestBody Assignment assignment) {
         Assignment updatedAssignment = assignmentService.updateAssignment(id, assignment);
+        EntityModel<AssignmentDTO> assignmentModel = assignmentModelAssembler.toModel(updatedAssignment);
 
-        return assignmentModelAssembler.toModel(updatedAssignment);
+        return ResponseEntity.created(assignmentModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(assignmentModel);
     }
 }
