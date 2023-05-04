@@ -3,15 +3,17 @@ package com.gkritas.privateschoolmanager.service;
 import com.gkritas.privateschoolmanager.exception.TrainerNotFoundException;
 import com.gkritas.privateschoolmanager.model.Trainer;
 import com.gkritas.privateschoolmanager.repository.TrainerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class TrainerService {
-    @Autowired
-    private TrainerRepository trainerRepository;
+    private final TrainerRepository trainerRepository;
+
+    public TrainerService(TrainerRepository trainerRepository) {
+        this.trainerRepository = trainerRepository;
+    }
 
     public List<Trainer> findAllTrainers() {
         return trainerRepository.findAll();
@@ -24,7 +26,7 @@ public class TrainerService {
                         new TrainerNotFoundException("Trainer not found with id " + id));
     }
 
-    public Trainer createTrainer(Trainer trainer) {
+    public Trainer saveTrainer(Trainer trainer) {
         return trainerRepository.save(trainer);
     }
 

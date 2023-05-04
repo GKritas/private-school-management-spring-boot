@@ -3,15 +3,18 @@ package com.gkritas.privateschoolmanager.service;
 import com.gkritas.privateschoolmanager.exception.CourseNotFoundException;
 import com.gkritas.privateschoolmanager.model.Course;
 import com.gkritas.privateschoolmanager.repository.CourseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class CourseService {
-    @Autowired
-    private CourseRepository courseRepository;
+    private final CourseRepository courseRepository;
+
+    public CourseService(CourseRepository courseRepository) {
+        this.courseRepository = courseRepository;
+    }
+
 
     public List<Course> findAllCourses() {
         return courseRepository.findAll();
@@ -24,7 +27,7 @@ public class CourseService {
 
     }
 
-    public Course createCourse(Course course) {
+    public Course saveCourse(Course course) {
         return courseRepository.save(course);
     }
 

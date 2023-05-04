@@ -44,7 +44,7 @@ public class TrainerController {
 
     @PostMapping
     public ResponseEntity<EntityModel<Trainer>> addTrainer(@RequestBody Trainer trainer) {
-        Trainer createdTrainer = trainerService.createTrainer(trainer);
+        Trainer createdTrainer = trainerService.saveTrainer(trainer);
         EntityModel<Trainer> trainerModel = trainerModelAssembler.toModel(createdTrainer);
 
         return ResponseEntity.created(trainerModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(trainerModel);

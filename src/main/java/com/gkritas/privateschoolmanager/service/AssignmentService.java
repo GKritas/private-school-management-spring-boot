@@ -3,7 +3,6 @@ package com.gkritas.privateschoolmanager.service;
 import com.gkritas.privateschoolmanager.exception.AssignmentNotFoundException;
 import com.gkritas.privateschoolmanager.model.Assignment;
 import com.gkritas.privateschoolmanager.repository.AssignmentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +10,11 @@ import java.util.List;
 @Service
 public class AssignmentService {
 
-    @Autowired
-    private AssignmentRepository assignmentRepository;
+    private final AssignmentRepository assignmentRepository;
+
+    public AssignmentService(AssignmentRepository assignmentRepository) {
+        this.assignmentRepository = assignmentRepository;
+    }
 
     public List<Assignment> findAllAssignment() {
         return assignmentRepository.findAll();
@@ -25,7 +27,7 @@ public class AssignmentService {
                 .orElseThrow(()-> new AssignmentNotFoundException("Assignment not found with id " + id));
     }
 
-    public Assignment createAssignment(Assignment assignment) {
+    public Assignment saveAssignment(Assignment assignment) {
         return assignmentRepository.save(assignment);
     }
 

@@ -3,15 +3,17 @@ package com.gkritas.privateschoolmanager.service;
 import com.gkritas.privateschoolmanager.exception.StudentNotFoundException;
 import com.gkritas.privateschoolmanager.model.Student;
 import com.gkritas.privateschoolmanager.repository.StudentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class StudentService {
-    @Autowired
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
+
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
 
     public List<Student> findAllStudents() {
         return studentRepository.findAll();
@@ -25,7 +27,7 @@ public class StudentService {
                         new StudentNotFoundException("Student not found with id: " + id));
     }
 
-    public Student createStudent(Student student) {
+    public Student saveStudent(Student student) {
         return studentRepository.save(student);
     }
 

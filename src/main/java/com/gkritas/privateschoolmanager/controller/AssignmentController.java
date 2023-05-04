@@ -45,7 +45,7 @@ public class AssignmentController {
 
     @PostMapping
     public ResponseEntity<EntityModel<Assignment>> addAssignment(@RequestBody Assignment assignment) {
-        Assignment createdAssignment = assignmentService.createAssignment(assignment);
+        Assignment createdAssignment = assignmentService.saveAssignment(assignment);
         EntityModel<Assignment> assignmentModel = assignmentModelAssembler.toModel(createdAssignment);
         return ResponseEntity
                 .created(assignmentModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(assignmentModel);

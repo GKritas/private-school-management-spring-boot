@@ -41,7 +41,7 @@ public class StudentController {
 
     @PostMapping
     public ResponseEntity<EntityModel<Student>> addStudent(@RequestBody Student student) {
-        Student createdStudent = studentService.createStudent(student);
+        Student createdStudent = studentService.saveStudent(student);
         EntityModel<Student> studentModel = studentModelAssembler.toModel(createdStudent);
         return ResponseEntity.created(studentModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(studentModel);
     }

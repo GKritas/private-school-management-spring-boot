@@ -47,7 +47,7 @@ public class CourseController {
 
     @PostMapping
     public ResponseEntity<EntityModel<Course>> createCourse(@RequestBody Course course) {
-        Course createdCourse = courseService.createCourse(course);
+        Course createdCourse = courseService.saveCourse(course);
 
         EntityModel<Course> courseModel = courseModelAssembler.toModel(createdCourse);
 
