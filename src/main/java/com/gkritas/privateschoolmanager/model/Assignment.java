@@ -8,10 +8,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 
-@Entity(name = "assignments")
+@Entity
+@Table(name = "assignment")
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Assignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,14 +25,17 @@ public class Assignment {
     private LocalDate dueDate;
     private Long maximumScore;
     private Long actualScore;
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
-    @ManyToMany(mappedBy = "assignments")
-    private List<Student> students;
 
     @ManyToOne
     @JoinColumn(name = "trainer_id")
     private Trainer trainer;
+
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
+
+    @ManyToMany(mappedBy = "assignments")
+    private List<Student> students;
+
 
 }

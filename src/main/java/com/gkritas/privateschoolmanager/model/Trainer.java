@@ -7,10 +7,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 
-@Entity(name = "trainers")
+@Entity
+@Table(name = "trainer")
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Trainer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +32,9 @@ public class Trainer {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @ManyToMany(mappedBy = "trainers")
+    @ManyToMany(mappedBy = "trainers", cascade = CascadeType.ALL)
     private List<Student> students;
 
-    @OneToMany(mappedBy = "trainer")
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     private List<Assignment> assignments;
 }

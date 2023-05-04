@@ -7,10 +7,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 
-@Entity(name = "students")
+@Entity
+@Table(name = "student")
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +27,10 @@ public class Student {
     private String gender;
     private LocalDate enrollmentDate;
 
-    @ManyToMany(mappedBy = "students")
+    @ManyToMany(mappedBy = "students", cascade = CascadeType.ALL)
     private List<Course> courses;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "student_assignment",
             joinColumns = @JoinColumn(name = "student_id"),
@@ -35,7 +38,7 @@ public class Student {
     )
     private List<Assignment> assignments;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "student_trainer",
             joinColumns = @JoinColumn(name = "student_id"),
